@@ -36,8 +36,11 @@ Please provide answers to these questions using markdown notation and place them
     - [ ] NO - Not Yet
 
 
-3. Please provide a link to the repository you are using for this class.
+3. Please provide a link to the repository you are using for this class.\
+   https://github.com/arslandulatuly/Sanabayev_CS283_2425.git
 
-4. Briefly describe what you want to get out of this class.
+4. Briefly describe what you want to get out of this class.\
+    In this class, I would like to learn more about computer and systems architecture because I am currently considering taking it as my concentration. I want to gain a better understanding of the connection between hardware and software as well.
 
-5. Briefly describe any concerns you might be having with being successful in this class (if any).
+5. Briefly describe any concerns you might be having with being successful in this class (if any). \
+   I am a little stressed about not having taken CS 281 beforehand and being a week late to class, but I will attend office hours and am hoping to be caught up by the end of this week.  
