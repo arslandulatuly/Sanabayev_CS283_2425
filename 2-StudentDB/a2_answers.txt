@@ -1,0 +1,14 @@
+Arslan Sanabayev, answers for assignment 2, CS283
+
+1) Yes, is good design. It makes the code cleaner, more modular, and easier to maintain. It also helps isolate the student lookup logic for easier testing.
+
+2) The bug comes from returning a pointer to a local variable student. When the function ends, that memory is freed, so accessing it afterward leads to undefined behavior, potentially causing crashes
+
+3) This works but it can cause memory leaks if we forget to free() the allocated memory. If used in a loop, it could also lead to excessive heap usage without proper cleanup
+
+4)
+	a) The difference is due to sparse files. ls shows the total file size (including unused space), while du shows actual disk usage, which only counts the used blocks. Sparse files don’t take up physical space for unused parts
+
+	b) Until ID=64, the file just had sparse storage, so the disk usage didn’t increase. When ID=64 was added, the file became large enough to use a full block, which is why du went from 4KB to 8KB
+
+	c) When you added student ID=99999, the file size ls went up to 6400000 bytes because the large ID needed more space. But du only shows 12KB because most of the file is still sparse and doesn’t actually take up that much disk space
