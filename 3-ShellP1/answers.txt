@@ -1,0 +1,23 @@
+Arslan Sanabayev, as5764
+
+1.fgets() is a good choice because it safely reads user input while preventing buffer overflows, unlike gets(). It also allows handling of multi-word inputs and preserves spaces.
+
+2. Using malloc() allows dynamic allocation, so cmd_buff can handle varying input sizes without wasting memory or risking overflow in a fixed-size array.
+
+3. Trimming spaces ensures correct command parsing. If not trimmed, extra spaces could cause incorrect tokenization, leading to execution failures or unexpected behavior.
+
+4.
+	a. ls > output.txt (redirects STDOUT to a file). The challenge is handling file creation and permissions.
+	   grep "error" < log.txt (redirects a file to STDIN). The challenge properly managing file descriptors.
+	   command 2> error.log (redirects STDERR to a file). The challenge is ensuring STDERR is correctly isolated.
+	
+	b. Redirection modifies input/output locations (e.g., files).
+	   Piping (|) connects processes, sending one command's output as another’s input.
+	
+	c. Prevents error messages from mixing with regular output, allowing clearer debugging and proper output redirection.
+
+	d. Errors should be logged or displayed separately.
+	   We can merge STDERR and STDOUT using command 2>&1, but providing options for separation enhances usability.
+
+
+
