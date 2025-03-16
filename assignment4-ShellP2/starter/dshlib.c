@@ -1,3 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdbool.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <errno.h>
+#include "dshlib.h"
+//ARSLAN SANABAYEV. as5764. 03/15/2025
+/*
+* Implement your exec_local_cmd_loop function by building a loop that prompts the 
+* user for input.  Use the SH_PROMPT constant from dshlib.h and then
+* use fgets to accept user input.
+* 
+*      while(1){
+*        printf("%s", SH_PROMPT);
+*        if (fgets(cmd_buff, ARG_MAX, stdin) == NULL){
+*           printf("\n");
+*           break;
+*        }
+*        //remove the trailing \n from cmd_buff
+*        cmd_buff[strcspn(cmd_buff,"\n")] = '\0';
+* 
+*        //IMPLEMENT THE REST OF THE REQUIREMENTS
+*      }
+* 
+*   Also, use the constants in the dshlib.h in this code.  
+*      SH_CMD_MAX              maximum buffer size for user input
+*      EXIT_CMD                constant that terminates the dsh program
+*      SH_PROMPT               the shell prompt
+*      OK                      the command was parsed properly
+*      WARN_NO_CMDS            the user command was empty
+*      ERR_TOO_MANY_COMMANDS   too many pipes used
+*      ERR_MEMORY              dynamic memory management failure
+* 
+*   errors returned
+*      OK                     No error
+*      ERR_MEMORY             Dynamic memory management failure
+*      WARN_NO_CMDS           No commands parsed
+*      ERR_TOO_MANY_COMMANDS  too many pipes used
+*   
+*   console messages
+*      CMD_WARN_NO_CMD        print on WARN_NO_CMDS
+*      CMD_ERR_PIPE_LIMIT     print on ERR_TOO_MANY_COMMANDS
+*      CMD_ERR_EXECUTE        print on execution failure of external command
+* 
+*  Standard Library Functions You Might Want To Consider Using (assignment 1+)
+*      malloc(), free(), strlen(), fgets(), strcspn(), printf()
+* 
+*  Standard Library Functions You Might Want To Consider Using (assignment 2+)
+*      fork(), execvp(), exit(), chdir()
+*/
+
 static int last_return_code = 0;
 
 Built_In_Cmds exec_cd_command(cmd_buff_t *cmd) {
@@ -88,6 +143,8 @@ int build_cmd_buff(char *cmd_line, cmd_buff_t *cmd_buff) {
                     cmd_buff->argv[arg_pos++] = strndup(&cmd_line[arg_start], len);
                 }
                 arg_start = pos + 1;
+            } else {
+                arg_start = pos + 1;
             }
         } else if (isspace(cmd_line[pos]) && !in_quotes) {
             if (pos > arg_start) {
@@ -109,6 +166,7 @@ int build_cmd_buff(char *cmd_line, cmd_buff_t *cmd_buff) {
     cmd_buff->argv[arg_pos] = NULL;
     return (arg_pos > 0) ? OK : WARN_NO_CMDS;
 }
+
 
 int exec_cmd(cmd_buff_t *cmd) {
     pid_t pid = fork();
@@ -147,16 +205,16 @@ int exec_local_cmd_loop() {
         printf("%s", SH_PROMPT);
         if (fgets(cmd_line, SH_CMD_MAX, stdin) == NULL) {
             printf("\n");
-            break;
-        }
-        cmd_line[strcspn(cmd_line, "\n")] = '\0';
-        rc = build_cmd_buff(cmd_line, &cmd);
-        if (rc == WARN_NO_CMDS) continue;
-        Built_In_Cmds cmd_type = exec_built_in_cmd(&cmd);
-        if (cmd_type == BI_CMD_EXIT) break;
-        else if (cmd_type == BI_EXECUTED) continue;
-        exec_cmd(&cmd);
-        free_cmd_buff(&cmd);
+                break;
+            }
+            cmd_line[strcspn(cmd_line, "\n")] = '\0';
+            rc = build_cmd_buff(cmd_line, &cmd);
+            if (rc == WARN_NO_CMDS) continue;
+                       Built_In_Cmds cmd_type = exec_built_in_cmd(&cmd);
+            if (cmd_type == BI_CMD_EXIT) break;
+            else if (cmd_type == BI_EXECUTED) continue;
+            exec_cmd(&cmd);
+            free_cmd_buff(&cmd);
     }
     free_cmd_buff(&cmd);
     return OK;
