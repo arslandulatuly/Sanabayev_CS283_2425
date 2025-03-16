@@ -133,7 +133,35 @@
          }
          pos++;
      }
- 
+  
+ int alloc_cmd_buff(cmd_buff_t *cmd_buff) {
+    cmd_buff->argc = 0;
+    cmd_buff->_cmd_buffer = NULL;
+    for (int i = 0; i < CMD_ARGV_MAX; i++) {
+        cmd_buff->argv[i] = NULL;
+    }
+    return OK;
+}
+
+int free_cmd_buff(cmd_buff_t *cmd_buff) {
+    if (cmd_buff->_cmd_buffer) {
+        free(cmd_buff->_cmd_buffer);
+        cmd_buff->_cmd_buffer = NULL;
+    }
+    for (int i = 0; i < cmd_buff->argc; i++) {
+        if (cmd_buff->argv[i]) {
+            free(cmd_buff->argv[i]);
+            cmd_buff->argv[i] = NULL;
+        }
+    }
+    cmd_buff->argc = 0;
+    return OK;
+}
+
+int clear_cmd_buff(cmd_buff_t *cmd_buff) {
+    free_cmd_buff(cmd_buff);
+    return alloc_cmd_buff(cmd_buff);
+}
      if (pos > arg_start) {
          int len = pos - arg_start;
          cmd_buff->argv[arg_pos] = strndup(&cmd_line[arg_start], len);
