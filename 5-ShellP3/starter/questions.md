@@ -1,3 +1,5 @@
+Arslan Sanabayev, as5764, 03.16.2025, CS283
+
 1. Your shell forks multiple child processes when executing piped commands. How does your implementation ensure that all child processes complete before the shell continues accepting user input? What would happen if you forgot to call waitpid() on all child processes?
 
 The implementation uses a loop to call waitpid() on each forked process ID, ensuring all child processes complete before the shell returns to the prompt. If waitpid() calls were omitted, zombie processes would accumulate, the shell would return to the prompt prematurely, pipeline execution would be unpredictable, return codes wouldn't be captured correctly, and system resources would be wasted by uncollected process entries in the process table.
